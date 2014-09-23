@@ -81,21 +81,36 @@ class PlantMetricsAnalyzer
   def highest_avg_temp
     avg_temps = [temperature("container1"), temperature("container2"), temperature("container3")]
     container_index = avg_temps.find_index(avg_temps.max)
-    "container#{container_index + 1}"
+    "container#{container_index + 1} - #{avg_temps.max}"
   end
 
   def highest_water_level
     water_level = [water_level("container1"), water_level("container2"), water_level("container3")]
     container_index = water_level.find_index(water_level.max)
-    "container#{container_index + 1}"
+    "container#{container_index + 1} - #{water_level.max}"
   end
 
   def highest_pH
     pH_levels = [pH("container1"), pH("container2"), pH("container3")]
     container_index = pH_levels.find_index(pH_levels.max)
-    "container#{container_index + 1}"
+    "container#{container_index + 1} - #{pH_levels.max}"
   end
+
+  def highest_pH_within_dates(start_time, end_time)
+    pHs = []
+    containers = []
+    date_range = Time.parse("2014-01-01 #{start_time} UTC")..Time.parse("2014-01-01 #{end_time} UTC")
+    read_file.each do |line|
+      if date_range.cover?(Time.parse(line[0]))
+        pHs << line[2]
+        containers << line[1]
+      end
+    end
+    highest_pH_index = pHs.find_index(pHs.max)
+    containers[highest_pH_index]
+  end
+
 
 end
 
-p PlantMetricsAnalyzer.new("data/metrics.tsv").highest_pH
+p PlantMetricsAnalyzer.new("data/metrics.tsv").highest_pH_within_dates("00:00:00", "08:00:00")
