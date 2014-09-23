@@ -78,6 +78,24 @@ class PlantMetricsAnalyzer
     container_hash
   end
 
+  def highest_avg_temp
+    avg_temps = [temperature("container1"), temperature("container2"), temperature("container3")]
+    container_index = avg_temps.find_index(avg_temps.max)
+    "container#{container_index + 1}"
+  end
+
+  def highest_water_level
+    water_level = [water_level("container1"), water_level("container2"), water_level("container3")]
+    container_index = water_level.find_index(water_level.max)
+    "container#{container_index + 1}"
+  end
+
+  def highest_pH
+    pH_levels = [pH("container1"), pH("container2"), pH("container3")]
+    container_index = pH_levels.find_index(pH_levels.max)
+    "container#{container_index + 1}"
+  end
+
 end
 
-p PlantMetricsAnalyzer.new("data/metrics.tsv").container_average("container1")
+p PlantMetricsAnalyzer.new("data/metrics.tsv").highest_pH
